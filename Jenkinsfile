@@ -63,10 +63,10 @@ pipeline {
                 //     sh 'sudo docker push hk328/img1:latest'
 
                 script{
-                    withCredentials([string(credentialsId: 'nexus', variable: 'nexus')]) {
-                        sh ' sudo docker login -u admin -p ${dockerPws}'
-                    }
-
+                    // withCredentials([string(credentialsId: 'nexus', variable: 'nexus')]) {
+                    //     sh ' sudo docker login -u admin -p ${dockerPws}'
+                    // }
+                      sh ' sudo docker login -u admin ec2-18-224-31-21.us-east-2.compute.amazonaws.com:8085 -pnexus'
                       sh ' sudo docker build . -t ec2-18-224-31-21.us-east-2.compute.amazonaws.com:8085/img1:latest'        
                 }
             }
