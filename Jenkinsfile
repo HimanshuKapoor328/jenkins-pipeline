@@ -19,50 +19,58 @@ pipeline {
             }
         }
         
-        // Building Docker images
-    stage('Building image') {
-      steps{
-        script {
-          dockerImage = docker.build imageName
+    //     // Building Docker images
+    // stage('Building image') {
+    //   steps{
+    //     script {
+    //       dockerImage = docker.build imageName
+    //     }
+    //   }
+    // }
+
+    // // Uploading Docker images into Nexus Registry
+    // stage('Uploading to Nexus') {
+    //  steps{  
+    //      script {
+    //          docker.withRegistry( 'http://'+registry, registryCredentials ) {
+    //          dockerImage.push('latest')
+    //       }
+    //     }
+    //   }
+    // }
+
+
+
+        stage('Build docker image'){
+            steps{
+                script{
+                    // sh ' sudo docker build . -t hk328/img1:latest'
+                    sh ' sudo docker build . -t ec2-18-224-31-21.us-east-2.compute.amazonaws.com:8085/img1:latest'
+                }
+            }
         }
-      }
-    }
-
-    // Uploading Docker images into Nexus Registry
-    stage('Uploading to Nexus') {
-     steps{  
-         script {
-             docker.withRegistry( 'http://'+registry, registryCredentials ) {
-             dockerImage.push('latest')
-          }
-        }
-      }
-    }
-
-
-
-        // stage('Build docker image'){
-        //     steps{
-        //         script{
-        //             sh ' sudo docker build . -t hk328/img1:latest'
-        //         }
-        //     }
-        // }
         
-        // stage('Push docker image'){
-        //     steps{
-        //         script{
-        //             withCredentials([string(credentialsId: 'dockerPws', variable: 'dockerPws')]) {
-        //                 sh ' sudo docker login -u hk328 -p ${dockerPws}'
-        //             }
-        //             // withCredentials([string(credentialsId: 'docker-pass', variable: 'docker-pass')]) {
-        //             //     sh ' sudo docker login -u hk328 -p ${docker-pass}'
-        //             // }
-        //             // sh 'echo $dockerPws | sudo docker login -u hk328 --password-stdin'
-        //             sh 'sudo docker push hk328/img1:latest'
-        //         }
-        //     }
-        // }
+        stage('Push docker image'){
+            steps{
+                // script{
+                //     withCredentials([string(credentialsId: 'dockerPws', variable: 'dockerPws')]) {
+                //         sh ' sudo docker login -u hk328 -p ${dockerPws}'
+                //     }
+                //     // withCredentials([string(credentialsId: 'docker-pass', variable: 'docker-pass')]) {
+                //     //     sh ' sudo docker login -u hk328 -p ${docker-pass}'
+                //     // }
+                //     // sh 'echo $dockerPws | sudo docker login -u hk328 --password-stdin'
+                //     sh 'sudo docker push hk328/img1:latest'
+
+                script{
+                    withCredentials([string(credentialsId: 'nexus', variable: 'nexus')]) {
+                        sh ' sudo docker login -u admin -p ${dockerPws}'
+                    }
+
+                      sh ' sudo docker build . -t ec2-18-224-31-21.us-east-2.compute.amazonaws.com:8085/img1:latest'        
+                }
+            }
+        }
         
     }
 }
