@@ -67,7 +67,7 @@ pipeline {
                     //     sh ' sudo docker login -u admin -p ${dockerPws}'
                     // }
                       sh ' sudo docker login -u admin ec2-18-224-31-21.us-east-2.compute.amazonaws.com:8085 -pnexus'
-                      sh ' sudo push ec2-18-224-31-21.us-east-2.compute.amazonaws.com:8085/img1:latest'        
+                      sh ' sudo docker push ec2-18-224-31-21.us-east-2.compute.amazonaws.com:8085/img1:latest'        
                 }
             }
         }
